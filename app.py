@@ -15,7 +15,6 @@ from config import API_KEY
 from flask_cors import CORS, cross_origin
 from geopy.distance import geodesic
 from google.cloud.firestore_v1 import SERVER_TIMESTAMP
-import pytz
 import os
 
 # from apscheduler.schedulers.background import BackgroundScheduler
@@ -384,16 +383,10 @@ def start_ride():
         isNow = request.args.get('isNow')
         startTime = 0
 
-        local_tz = pytz.timezone('Asia/Kolkata')  # Change according to your region
-        if isNow == "true":  
-            startTime = datetime.now().astimezone(local_tz).strftime('%Y-%m-%d %H:%M:%S')
+        if(isNow):
+            startTime = SERVER_TIMESTAMP
         else:
-            utc_time = datetime.strptime(request.args.get('startTime'), '%Y-%m-%dT%H:%M:%S.%fZ')
-            startTime = utc_time.replace(tzinfo=pytz.utc).astimezone(local_tz).strftime('%Y-%m-%d %H:%M:%S')
-        # if(isNow):
-        #     startTime = SERVER_TIMESTAMP
-        # else:
-        #     startTime = request.args.get('startTime')
+            startTime = request.args.get('startTime')
 
         source = [s_lat, s_lng, s_str]
         destination = [d_lat, d_lng, d_str]
