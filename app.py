@@ -16,6 +16,7 @@ from flask_cors import CORS, cross_origin
 from geopy.distance import geodesic
 from google.cloud.firestore_v1 import SERVER_TIMESTAMP
 import pytz
+import os
 
 # from apscheduler.schedulers.background import BackgroundScheduler
 gmaps = googlemaps.Client(key=API_KEY)
@@ -704,5 +705,6 @@ def search_rides():
     return jsonify({'rides': results})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Use Render's PORT or fallback to 5000 for local
+    app.run(host="0.0.0.0", port=port, debug=True)
 
